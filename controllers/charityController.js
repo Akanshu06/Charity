@@ -1,53 +1,62 @@
-const { Charity, ImpactReport } = require('../models');
+const Charity = require('../models/Charity');
+//const { get } = require('../routes/charityRoutes');
 
-const registerCharity = async (req, res) => {
-  const { name, email, password, mission, goals, projects } = req.body;
-
-  // Validate input
-  if (!name || !email || !password || !mission || !goals) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
-
+// Register a new charity
+const createCharity = async (req, res) => {
+  const { name, mission, goal, category, location, description } = req.body;
   try {
-    // Check if charity already exists
-    const existingCharity = await Charity.findOne({ where: { email } });
-    if (existingCharity) {
-      return res.status(409).json({ error: 'Charity already exists' });
+    const charity = await Charity.create({ name, mission, goal, category, location, description });
+    res.status(201).json({ charity });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to register charity' });
+  }
+};
+
+// Update charity profile information
+const updateCharity = async (req, res) => {
+  const { name, mission, goal, category, location, description } = req.body;
+  try {
+    const charity = await Charity.findByPk(req.params.id);
+    if (charity) {
+      await charity.update({ name, mission, goal, category, location, description });
+      res.status(200).json({ charity });
+    } else {
+      res.status(404).json({ error: 'Charity not found' });
     }
-
-    // Create new charity
-    const charity = await Charity.create({ name, email, password, mission, goals, projects });
-    res.status(201).json({ id: charity.id, name: charity.name });
-  } catch (err) {
-    console.error('Error during charity registration:', err.message);
-    res.status(500).json({ error: 'Internal server error' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update charity' });
   }
 };
 
-const updateCharityProfile = async (req, res) => {
-  const { id } = req.params;
-  const { mission, goals } = req.body;
+// List all charities with optional search and filter
+const listCharities = async (req, res) => {
+  const { category, location } = req.query;
+  const whereClause = {};
+  if (category) whereClause.category = category;
+  if (location) whereClause.location = location;
+
   try {
-    const charity = await Charity.findByPk(id);
-    if (!charity) return res.status(404).json({ error: 'Charity not found' });
-    await charity.update({ mission, goals });
-    res.json(charity);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const charities = await Charity.findAll({ where: whereClause });
+    res.status(200).json({ charities });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch charities' });
   }
 };
 
-const addImpactReport = async (req, res) => {
-  const { id } = req.params;
-  const { title, description } = req.body;
+// View individual charity details
+const getCharity = async (req, res) => {
   try {
-    const charity = await Charity.findByPk(id);
-    if (!charity) return res.status(404).json({ error: 'Charity not found' });
-    const report = await ImpactReport.create({ title, description, CharityId: id });
-    res.status(201).json(report);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const charity = await Charity.findByPk(req.params.id);
+    if (charity) {
+      res.status(200).json({ charity });
+    } else {
+      res.status(404).json({ error: 'Charity not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch charity details' });
   }
 };
 
-module.exports = { registerCharity, updateCharityProfile, addImpactReport };
+module.exports={
+  createCharity,updateCharity,listCharities,getCharity
+}

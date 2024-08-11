@@ -1,9 +1,10 @@
 const express = require('express');
-const router = express.Router();
-const donationController = require('../controllers/donationController');
-const authMiddleware = require('../middlewares/authMiddleware');
+const { createDonation, verifyDonation, } = require('../controllers/donationController');
+const authenticate = require('../middleware/authenticate');
 
-router.post('/', authMiddleware.verifyToken, donationController.makeDonation);
-router.get('/history', authMiddleware.verifyToken, donationController.getDonationHistory);
+const router = express.Router();
+
+router.post('/', authenticate, createDonation);
+router.post('/verify', authenticate, verifyDonation);
 
 module.exports = router;

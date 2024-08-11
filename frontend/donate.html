@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+</head>
+<body>
+    <h1>Make a Donation</h1>
+    <form id="donate-form">
+        <label for="charity-select">Select Charity:</label>
+        <select id="charity-select">
+            <option value="" disabled selected>Select a charity</option>
+        </select>
+
+        <label for="amount">Donation Amount:</label>
+        <input type="number" id="amount" placeholder="Donation Amount" required>
+
+        <button type="submit">Donate</button>
+    </form>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="assets/js/donate.js"></script>
+</body>
+</html>

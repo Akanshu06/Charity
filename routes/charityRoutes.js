@@ -1,10 +1,11 @@
 const express = require('express');
-const router = express.Router();
-const charityController = require('../controllers/charityController');
-const {verifyToken,admin} = require('../middlewares/authMiddleware');
+const { createCharity, listCharities, updateCharity, getCharity } = require('../controllers/charityController');
 
-router.post('/register', verifyToken,admin, charityController.registerCharity);
-router.put('/:id', verifyToken,admin, charityController.updateCharityProfile);
-router.post('/:id/impact', verifyToken,admin, charityController.addImpactReport);
+const router = express.Router();
+
+router.post('/create', createCharity);
+router.get('/', listCharities);
+router.put('/:id',updateCharity);
+router.get('/:id',getCharity);
 
 module.exports = router;

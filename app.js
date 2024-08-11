@@ -1,39 +1,35 @@
+require('dotenv').config();
 const express = require('express');
-const app = express();
 const cors = require('cors');
 const path = require('path');
-const bodyParser = require('body-parser');
+const sequelize = require('./config/database');
+
 const authRoutes = require('./routes/authRoutes');
 const charityRoutes = require('./routes/charityRoutes');
 const donationRoutes = require('./routes/donationRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const notificationRoutes = require('./routes/notificationRoutes');
-const { sequelize } = require('./models');
+const profileRoutes = require('./routes/profileRoutes');
+
+const app = express();
 
 app.use(cors({
   origin: '*', 
-  methods: ['GET', 'POST'], 
-  allowedHeaders: ['Content-Type', 'Authorization'] 
+  methods: ['POST', 'GET', 'PUT', 'DELETE']
 }));
+
+app.use(express.json());
+
 
 app.use(express.static(path.join(__dirname, 'frontend')));
 
+app.use('/auth', authRoutes);
+app.use('/charity', charityRoutes);
+app.use('/donation', donationRoutes);
+app.use('/admin', adminRoutes);
+app.use('/profile', profileRoutes);  
 
-app.use(bodyParser.json());
-
-app.use('/api/auth', authRoutes);
-app.use('/api/charities', charityRoutes);
-app.use('/api/donations', donationRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/notifications', notificationRoutes);
-
-const startServer = async () => {
-  try {
-    await sequelize.sync({ force: false }); // Use { force: false } in production
-    app.listen(process.env.PORT || 3000, () => console.log('Server running on port 3000'));
-  } catch (err) {
-    console.error('Unable to connect to the database:', err);
-  }
-};
-
-startServer();
+sequelize.sync().then(() => {
+  app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+  });
+});

@@ -1,47 +1,19 @@
-const { User, Charity } = require('../models');
+const User = require('../models/User');
+const Charity = require('../models/Charity');
 
-const getUsers = async (req, res) => {
-  try {
-    const users = await User.findAll();
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+exports.getUsers = async (req, res) => {
+  const users = await User.findAll();
+  res.json({ users });
 };
 
-const updateUserStatus = async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-  try {
-    const user = await User.findByPk(id);
-    if (!user) return res.status(404).json({ error: 'User not found' });
-    // Update user status logic (if any)
-    res.json(user);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
+exports.getCharities = async (req, res) => {
+  const charities = await Charity.findAll();
+  res.json({ charities });
 };
 
-const getCharities = async (req, res) => {
-  try {
-    const charities = await Charity.findAll();
-    res.json(charities);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+exports.approveCharity = async (req, res) => {
+  const charity = await Charity.findByPk(req.params.id);
+  charity.approved = true;
+  await charity.save();
+  res.json({ charity });
 };
-
-const updateCharityStatus = async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-  try {
-    const charity = await Charity.findByPk(id);
-    if (!charity) return res.status(404).json({ error: 'Charity not found' });
-    // Update charity status logic (if any)
-    res.json(charity);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
-module.exports = { getUsers, updateUserStatus, getCharities, updateCharityStatus };

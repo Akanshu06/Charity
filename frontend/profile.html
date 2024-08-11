@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <h1>Profile Management</h1>
+
+    <div id="profile-container">
+        <form id="profile-form">
+            <h2>Update Profile</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="email" id="email" placeholder="Email">
+            <button type="submit">Update Profile</button>
+        </form>
+    </div>
+    
+    
+    <div id="donation-history">
+        <h2>Your Donation History</h2>
+        <ul id="donations-list"></ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="assets/js/profile.js"></script>
+</body>
+</html>
