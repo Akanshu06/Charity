@@ -1,20 +1,17 @@
+document.getElementById('login-form').addEventListener('submit', (e) => {
+    e.preventDefault();
 
-// Handling login
-document.addEventListener('DOMContentLoaded', function() {
-    // Handling login
-    document.getElementById('login-form').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-        try {
-            const response = await axios.post('http://localhost:3000/auth/login', { email, password });
-            localStorage.setItem('token', response.data.token);
-            alert('Login successful!');
-            window.location.href = 'admin.html';
-        } catch (error) {
-            console.error(error);
-            alert('Login failed!');
-        }
-    });
+    axios.post('http://localhost:3000/api/auth/login', {
+        email,
+        password
+    })
+    .then(response => {
+        localStorage.setItem('token', response.data.token);
+        console.log('Login successful:', response.data);
+        window.location.href = 'index.html'; // Redirect to index page after login
+    })
+    .catch(error => console.error('Error logging in:', error));
 });

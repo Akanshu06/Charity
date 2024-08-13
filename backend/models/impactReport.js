@@ -1,3 +1,4 @@
+
 module.exports = (sequelize, DataTypes) => {
     const ImpactReport = sequelize.define('ImpactReport', {
       title: {

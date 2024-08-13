@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charity Management System</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to Charity Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="registerCharity.html">Register Charity</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="admin.html">Admin Dashboard</a></li>
+                <!-- <li><a href="login.html">Login</a></li>
+                <li><a href="signup.html">Sign Up</a></li> -->
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Search and Filter Charities</h2>
+            <input type="text" id="searchBar" placeholder="Search charities...">
+            <div id="charitiesContainer"></div>
+        </section>
+
+        <section>
+            <h2>About Us</h2>
+            <p>Our platform connects donors with charities, making it easier for charities to manage their profiles and for donors to find and support causes they care about.</p>
+        </section>
+
+        <section>
+            <h2>How It Works</h2>
+            <ul>
+                <li>Charities can register and create detailed profiles.</li>
+                <li>Admins manage user and charity registrations, ensuring the platform's integrity.</li>
+                <li>Users can browse and donate to approved charities.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Get Started</h2>
+            <p>If you're a charity looking to register, or an admin looking to manage the platform, use the navigation links above to get started.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Charity Management System. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="assets/js/index.js"></script>
+</body>
+</html>

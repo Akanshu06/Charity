@@ -1,7 +1,8 @@
+
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const User = require('./User');
-const Charity = require('./Charity');
+const Charity = require('./charity');
 
 class Donation extends Model {}
 

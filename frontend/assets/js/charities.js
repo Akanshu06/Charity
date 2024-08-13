@@ -1,67 +1,28 @@
-document.addEventListener('DOMContentLoaded', async function() {
-    try {
-        const response = await axios.get('http://localhost:3000/charity');
-        const charitiesContainer = document.getElementById('charities-list');
-        response.data.charities.forEach(charity => {
-            const div = document.createElement('div');
-            div.innerHTML = `
-                <a href='register.html'>
-                    <h2>${charity.name}</h2>
-                    <p>${charity.category}</p>
-                    Click here to Donate
-                </a>`;
-            charitiesContainer.appendChild(div);
-        });
-    } catch (error) {
-        console.error(error);
-        alert('Failed to load charities');
-    }
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:3000/api/charities', {
+        headers: { 'Authorization': token }
+    })
+        .then(response => {
+            const charityList = document.getElementById('charity-list');
+            const charities = response.data.charities || [];
+
+            charities.forEach(charity => {       
+                const charityDiv = document.createElement('div');
+                charityDiv.classList.add('charity-item');
+                // Create content
+                const charityName = document.createElement('p');
+                charityName.textContent = `${charity.name} - ${charity.description}`;
+                // Create 'Register' link
+                const registerLink = document.createElement('a');
+                registerLink.href = `donate.html?charityId=${charity.id}`; // Include charity ID in URL
+                registerLink.textContent = 'Donate';
+                // Append content to container
+                charityDiv.appendChild(charityName);
+                charityDiv.appendChild(registerLink);
+                // Append container to list
+                charityList.appendChild(charityDiv);
+            });
+        })
+        .catch(error => console.error('Error fetching charities:', error));
 });
-
-// Register a new charity
-document.getElementById('charity-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const name = document.getElementById('name').value;
-    const mission = document.getElementById('mission').value;
-    const goal = document.getElementById('goal').value;
-    const category = document.getElementById('category').value;
-    const description = document.getElementById('description').value
-    const location = document.getElementById('location').value
-
-    try {
-        const response = await axios.post('http://localhost:3000/charity/create', { name, mission, goal, category,location,description});
-        alert('Charity registered successfully!');
-        window.location.href = '.charities.html'
-    } catch (error) {
-        console.error(error);
-        alert('Failed to register charity.');
-    }
-});
-
-// Load and display list of approved charities
-// async function loadCharities() {
-//     try {
-//         const response = await axios.get('http://localhost:3000/charity');
-//         const charitiesList = document.getElementById('charities-list');
-//         charitiesList.innerHTML = '';  // Clear previous list
-//         const charities = response.data.charities;
-//         console.log(charities);
-
-//         charities.forEach(charity => {
-//             const charityElement = document.createElement('div');
-//             charityElement.innerHTML = `
-//                 <a href='donate.html'>
-//                     <h2>${charity.name}</h2>
-//                     <p>${charity.category}</p>
-//                 </a>
-//             `;
-//             charitiesList.appendChild(charityElement);
-//         });
-//     } catch (error) {
-//         console.error(error);
-//         alert('Failed to load charities.');
-//     }
-// }
-
-// Load charities on page load
-//loadCharities();
