@@ -1,22 +1,28 @@
-const Notification = require('../models/notification');
+const { sendEmail } = require('../services/emailService');
+const Donation = require('../models/donation');
+const User = require('../models/user');
 
-exports.getNotifications = async (req, res) => {
-  try {
-    const notifications = await Notification.find({ userId: req.user.id });
-    res.status(200).json(notifications);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+exports.sendDonationConfirmation = async (req, res) => {
+  const { donationId } = req.body;
 
-exports.createNotification = async (req, res) => {
-  const { userId, message } = req.body;
-  
   try {
-    const newNotification = new Notification({ userId, message });
-    await newNotification.save();
-    res.status(201).json(newNotification);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const donation = await Donation.findByPk(donationId);
+    const user = await User.findByPk(donation.userId);
+
+    if (!user || !donation) {
+      return res.status(404).json({ message: 'User or Donation not found' });
+    }
+
+    await sendEmail(
+      user.email,
+      'Donation Confirmation',
+      `Thank you for your donation of $${donation.amount}!`,
+      `<p>Thank you for your donation of $${donation.amount}!</p>`
+    );
+
+    res.status(200).json({ message: 'Donation confirmation email sent' });
+  } catch (error) {
+    console.error('Error sending donation confirmation:', error);
+    res.status(500).json({ message: 'Failed to send confirmation email' });
   }
 };

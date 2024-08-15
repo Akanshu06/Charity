@@ -34,7 +34,7 @@ app.use('/api/notifications', notificationRoutes);
 
 // Connect to the database and start the server
 
-sequelize.sync().then(() => {
+sequelize.sync({alter:false}).then(() => {
     app.listen(3000, () => {
       console.log('Server running on http://localhost:3000');
     });

@@ -52,9 +52,7 @@ function approveCharity(id, approve) {
 function deleteCharity(id) {
     if (confirm('Are you sure you want to delete this charity?')) {
         axios.delete(`http://localhost:3000/api/admin/charity/${id}`, {
-            headers: {
-                'x-auth-token': localStorage.getItem('token')
-            }
+            headers: { 'Authorization': token }
         })
         .then(response => {
             console.log('Charity deleted:', response.data);

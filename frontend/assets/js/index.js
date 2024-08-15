@@ -1,6 +1,9 @@
 //const searchBar = document.getElementById('searchBar')
 const token = localStorage.getItem('token');
 document.addEventListener('DOMContentLoaded', async() => {
+    if(User.email === a@gmail.com){
+
+    }
     const searchBar = document.getElementById('searchBar');
     const charitiesContainer = document.getElementById('charitiesContainer');
 

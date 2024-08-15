@@ -2,7 +2,7 @@ const Charity = require('../models/charity');
 
 exports.getAllCharities = async (req, res) => {
   try {
-    const charities = await Charity.findAll();
+    const charities = await Charity.findAll({where: { approved: true }});
     res.status(200).json({charities});
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -11,14 +11,13 @@ exports.getAllCharities = async (req, res) => {
 
 exports.createCharity = async (req, res) => {
   try {
-    const { name, description, website,loction ,mission, goals, projects ,raised} = req.body;
-    console.log('ihihiu',loction,name,description);
-    
+    const { name, description, website,location ,mission, goals, projects ,raised} = req.body;
+    console.log('ihihiu',location,name,description);
     const newCharity = new Charity({
         name,
         description,
         website,
-        loction,
+        location,
         mission,
         goals,
         projects,

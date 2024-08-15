@@ -19,7 +19,7 @@ Charity.init({
   location: {
     type: DataTypes.STRING,
     allowNull: true,
-    defaultValue: 'Unknown',  // Set a default value
+    // Set a default value
   },
   mission: {
     type: DataTypes.TEXT,

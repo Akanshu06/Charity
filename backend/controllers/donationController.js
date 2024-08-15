@@ -1,5 +1,6 @@
 const Donation = require('../models/donation');
 const Charity = require('../models/charity');
+const crypto = require('crypto');
 const Razorpay = require('razorpay');
 require('dotenv').config();
 
@@ -47,35 +48,39 @@ exports.createDonation = async (req, res) => {
   }
 };
 
-// In verifyDonation
 exports.verifyDonation = async (req, res) => {
-  const { donationId, paymentId } = req.body;
+  const { donationId, paymentId, order_id, signature } = req.body;
+
   try {
     const donation = await Donation.findByPk(donationId);
-    if (!donation) return res.status(404).json({ error: 'Donation not found' });
+    if (!donation) {
+      return res.status(404).json({ error: 'Donation not found' });
+    }
 
-    // Verify payment signature 
-    const crypto = require('crypto');
+    // Generate the expected signature based on Razorpay's guidelines
     const generatedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-      .update(`${donationId}|${paymentId}`)
+      .update(`${order_id}|${paymentId}`)
       .digest('hex');
-    console.log('Generated Signature:', generatedSignature);
 
-    const signature = req.body.signature; 
+    // Compare the generated signature with the one received from Razorpay
     if (generatedSignature !== signature) {
       return res.status(400).json({ error: 'Invalid signature' });
     }
 
+    // Update donation status to 'completed' after successful verification
     donation.paymentStatus = 'completed';
     await donation.save();
 
+    // Update the total amount raised by the charity
     const charity = await Charity.findByPk(donation.charityId);
     charity.raised += donation.amount;
     await charity.save();
 
+    // Send a success response
     res.status(200).json({ message: 'Donation successful' });
+
   } catch (error) {
-    console.error('Error in verifyDonation:', error); // Log error details
+    console.error('Error in verifyDonation:', error);
     res.status(500).json({ error: 'Failed to verify donation' });
   }
 };
